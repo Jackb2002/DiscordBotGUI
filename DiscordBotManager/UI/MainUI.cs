@@ -153,7 +153,8 @@ namespace DiscordBotManager.UI
 
         private void EditCommandConfigWindow(object sender, EventArgs e)
         {
-
+            Form form = new CommandConfigForm();
+            form.ShowDialog();
         }
     }
 }

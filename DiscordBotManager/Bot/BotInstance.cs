@@ -32,6 +32,15 @@ namespace DiscordBotManager.Bot
             RegisterCommandsAsync().GetAwaiter();
         }
 
+        public void UpdateCommandConfig(CommandServiceConfig csc)
+        {
+            _ = _client.LogoutAsync().GetAwaiter();
+            _CommandServiceConfig = csc;
+            ConfigureBot();
+            RegisterCommandsAsync().GetAwaiter();
+            _ = Login(Program.MainWindow._KEY).GetAwaiter();
+        }
+
         /// <summary>
         /// Builds service provider and command service is created
         /// </summary>
