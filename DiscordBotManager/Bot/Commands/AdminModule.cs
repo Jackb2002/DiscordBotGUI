@@ -11,7 +11,7 @@ namespace DiscordBotManager.Bot.Commands
         public static bool enabled = true;
         [Command("kick")]
         [RequireUserPermission(GuildPermission.KickMembers)]
-        public async Task Kick(IGuildUser user, [Remainder]string reason)
+        public async Task Kick(IGuildUser user, [Remainder] string reason)
         {
             if (!enabled)
             {
@@ -24,7 +24,7 @@ namespace DiscordBotManager.Bot.Commands
 
         [Command("ban")]
         [RequireUserPermission(GuildPermission.BanMembers)]
-        public async Task Ban(IGuildUser user, [Remainder]string reason)
+        public async Task Ban(IGuildUser user, [Remainder] string reason)
         {
             if (!enabled)
             {

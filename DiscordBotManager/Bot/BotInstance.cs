@@ -14,8 +14,8 @@ namespace DiscordBotManager.Bot
         public DiscordSocketClient _client { get; private set; }
         public CommandService _commands;
         public IServiceProvider _services;
-        CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig();
-        char prefix = '!';
+        private CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig();
+        private readonly char prefix = '!';
         public BotInstance()
         {
             _client = new Discord.WebSocket.DiscordSocketClient();
@@ -73,16 +73,19 @@ namespace DiscordBotManager.Bot
         /// <returns></returns>
         private async Task HandleCommandAsync(SocketMessage arg)
         {
-            var msg = arg as SocketUserMessage;
+            SocketUserMessage msg = arg as SocketUserMessage;
 
-            if (msg is null || msg.Author.IsBot) return;
+            if (msg is null || msg.Author.IsBot)
+            {
+                return;
+            }
 
             int argPos = 0;
 
             if (msg.HasStringPrefix(prefix.ToString(), ref argPos)
                 || msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
-                var context = new SocketCommandContext(_client, msg);
+                SocketCommandContext context = new SocketCommandContext(_client, msg);
 
                 Debug.WriteLine(context.Message);
                 Debug.WriteLine(context.ToString());
@@ -156,16 +159,23 @@ namespace DiscordBotManager.Bot
         /// Wrapper For UI Write Method
         /// </summary>
         /// <param name="Message"></param>
-        void Output(string Message, bool DebugOnly = false)
+        private void Output(string Message, bool DebugOnly = false)
         {
             if (Program._DEBUG)
             {
-                System.Diagnostics.Debug.WriteLine(Message);
+                Debug.WriteLine(Message);
             }
-            if (DebugOnly) return;
+            if (DebugOnly)
+            {
+                return;
+            }
+
             Program.MainWindow.Output(Message);
         }
 
-        internal void Logout() => _client.LogoutAsync();
+        internal void Logout()
+        {
+            _client.LogoutAsync();
+        }
     }
 }

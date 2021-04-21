@@ -16,7 +16,10 @@ namespace DiscordBotManager.UI
         /// Output To The UI Console
         /// </summary>
         /// <param name="Message">Message To Output</param>
-        public void Output(string Message) => outputConsole.AppendText(String.Format("{0} > {1}", DateTime.Now, Message + Environment.NewLine));
+        public void Output(string Message)
+        {
+            outputConsole.AppendText(string.Format("{0} > {1}", DateTime.Now, Message + Environment.NewLine));
+        }
 
         private void MainUI_Load(object sender, EventArgs e)
         {
@@ -155,6 +158,16 @@ namespace DiscordBotManager.UI
         {
             Form form = new CommandConfigForm();
             form.ShowDialog();
+        }
+
+        private void MainUI_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(BOT._client.LoginState == Discord.LoginState.LoggedIn)
+            {
+                Output("Please logout before closing");
+                e.Cancel = true;
+                return;
+            }
         }
     }
 }

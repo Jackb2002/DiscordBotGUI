@@ -207,6 +207,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MainUI";
             this.Text = "Discord Manager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainUI_FormClosing);
             this.Load += new System.EventHandler(this.MainUI_Load);
             this.authControls.ResumeLayout(false);
             this.authControls.PerformLayout();

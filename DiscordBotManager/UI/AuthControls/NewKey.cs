@@ -5,7 +5,10 @@ namespace DiscordBotManager.UI.AuthControls
 {
     public partial class NewKey : Form
     {
-        public NewKey() => InitializeComponent();
+        public NewKey()
+        {
+            InitializeComponent();
+        }
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -14,6 +17,9 @@ namespace DiscordBotManager.UI.AuthControls
             Close();
         }
 
-        private void Button2_Click(object sender, EventArgs e) => Close();
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
