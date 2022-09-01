@@ -241,9 +241,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot\BotInstance.cs" />
-    <Compile Include="Bot\Commands\InfoModule.cs" />
-    <Compile Include="Bot\Commands\UserModule.cs" />
-    <Compile Include="Bot\Commands\AdminModule.cs" />
+    <Compile Include="Bot\Legacy Commands\LegacyInfoModule.cs" />
+    <Compile Include="Bot\Legacy Commands\LegacyUserModule.cs" />
+    <Compile Include="Bot\Legacy Commands\LegacyAdminModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\AuthControls\NewKey.cs">
