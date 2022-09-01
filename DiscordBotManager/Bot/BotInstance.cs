@@ -37,7 +37,7 @@ namespace DiscordBotManager.Bot
             }
 
             ConfigureBot();
-            RegisterCommandsAsync().GetAwaiter();
+            LegacyRegisterCommandsAsync().GetAwaiter();
         }
 
         public void UpdateCommandConfig(CommandServiceConfig csc)
@@ -45,7 +45,7 @@ namespace DiscordBotManager.Bot
             _ = _client.LogoutAsync().GetAwaiter();
             _CommandServiceConfig = csc;
             ConfigureBot();
-            RegisterCommandsAsync().GetAwaiter();
+            //LegacyRegisterCommandsAsync().GetAwaiter();
             _ = Login(Program.MainWindow._KEY).GetAwaiter();
         }
 
@@ -68,9 +68,9 @@ namespace DiscordBotManager.Bot
         /// Register Commands And Add Msg Handler
         /// </summary>
         /// <returns></returns>
-        public async Task RegisterCommandsAsync()
+        public async Task LegacyRegisterCommandsAsync()
         {
-            _client.MessageReceived += HandleCommandAsync;
+            _client.MessageReceived += LegacyClientRecievedMessage;
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
 
@@ -79,7 +79,7 @@ namespace DiscordBotManager.Bot
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private async Task HandleCommandAsync(SocketMessage arg)
+        private async Task LegacyClientRecievedMessage(SocketMessage arg)
         {
             SocketUserMessage msg = arg as SocketUserMessage;
 
