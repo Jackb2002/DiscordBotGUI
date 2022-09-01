@@ -7,7 +7,8 @@ namespace DiscordBotManager
 {
     internal static class Program
     {
-        public static string TOKEN_PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\BOTTKN.dat";
+        public static string TOKEN_PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\DiscordBot\\BOTTKN.dat";
+        public static string FLAKE_PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\DiscordBot\\BOTFLK.dat";
         /// <summary>
         /// Main Instance Of UI Window
         /// </summary>

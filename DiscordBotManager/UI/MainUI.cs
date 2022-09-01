@@ -6,7 +6,8 @@ namespace DiscordBotManager.UI
 {
     public partial class MainUI : Form
     {
-        internal string _KEY = "None";
+        internal string _KEY = "";
+        internal string _FLAKE = "";
         public Bot.BotInstance BOT;
         public MainUI()
         {
@@ -26,24 +27,36 @@ namespace DiscordBotManager.UI
             CheckForIllegalCrossThreadCalls = false;
             Output("Loaded UI...");
             Output("Creating Instace Of Bot");
-            BOT = new Bot.BotInstance();
+            BOT = new Bot.BotInstance(_FLAKE);
             Output("Created");
-            CheckSavedKey();
+            CheckSavedKeys();
         }
 
         /// <summary>
         /// Check And Reassign Loaded Key 
         /// </summary>
-        private void CheckSavedKey()
+        private void CheckSavedKeys()
         {
-            Output("Checking for key...");
+            Output("Checking for keys...");
+            //CHECK FOR TOKEN
             if (System.IO.File.Exists(Program.TOKEN_PATH))
             {
                 string contents = System.IO.File.ReadAllText(Program.TOKEN_PATH).Trim();
                 if (!(string.IsNullOrWhiteSpace(contents)))
                 {
+                    Output("Found key");
                     _KEY = contents;
                     loadedKey.Text = _KEY;
+                }
+            }
+            //CHECK FOR SNOWFLAKE
+            if (System.IO.File.Exists(Program.FLAKE_PATH))
+            {
+                string contents = System.IO.File.ReadAllText(Program.FLAKE_PATH).Trim();
+                if (!(string.IsNullOrWhiteSpace(contents)))
+                {
+                    Output("Found Snowflake");
+                    _FLAKE = contents;
                 }
             }
         }
@@ -68,16 +81,16 @@ namespace DiscordBotManager.UI
         /// <summary>
         /// Should be run to enable all controls only avalible when client is connected
         /// </summary>
-        public void EnableControls()
+        public void EnableConnectedOnlyControls()
         {
-            cmdControls.Enabled = true;
+            
         }
         /// <summary>
         /// Should be run to enable all controls only avalible when client is disconnected
         /// </summary>
-        public void DisableControls()
+        public void DisableConnectedOnlyControls()
         {
-            cmdControls.Enabled = false;
+            
         }
 
         private void LogoutBtn_Click(object sender, EventArgs e)
@@ -106,54 +119,6 @@ namespace DiscordBotManager.UI
             }
         }
 
-        private void ToggleAdmin(object sender, EventArgs e)
-        {
-            bool enabled = Bot.Commands.LegacyAdminModule.enabled;
-            Bot.Commands.LegacyAdminModule.enabled = !enabled;
-
-            if (enabled)
-            {
-                //its been disabled
-                button2.ForeColor = Color.Red;
-            }
-            else
-            {
-                button2.ForeColor = Color.Green;
-            }
-        }
-
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            bool enabled = Bot.Commands.LegacyUserModule.enabled;
-            Bot.Commands.LegacyUserModule.enabled = !enabled;
-
-            if (enabled)
-            {
-                //its been disabled
-                button3.ForeColor = Color.Red;
-            }
-            else
-            {
-                button3.ForeColor = Color.Green;
-            }
-        }
-
-        private void Button4_Click(object sender, EventArgs e)
-        {
-            bool enabled = Bot.Commands.LegacyInfoModule.enabled;
-            Bot.Commands.LegacyInfoModule.enabled = !enabled;
-
-            if (enabled)
-            {
-                //its been disabled
-                button4.ForeColor = Color.Red;
-            }
-            else
-            {
-                button4.ForeColor = Color.Green;
-            }
-        }
-
         private void EditCommandConfigWindow(object sender, EventArgs e)
         {
             Form form = new CommandConfigForm(BOT._CommandServiceConfig);
@@ -168,6 +133,12 @@ namespace DiscordBotManager.UI
                 e.Cancel = true;
                 return;
             }
+        }
+
+        private void addCustomFlake_Click(object sender, EventArgs e)
+        {
+            AuthControls.NewSnowflake form = new AuthControls.NewSnowflake();
+            form.ShowDialog();
         }
     }
 }

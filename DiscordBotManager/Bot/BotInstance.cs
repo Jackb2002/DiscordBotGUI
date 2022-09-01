@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -12,11 +13,13 @@ namespace DiscordBotManager.Bot
     public class BotInstance
     {
         internal DiscordSocketClient _client { get; private set; }
+        public static ulong GUILD_SNOWFLAKE { get; private set; }
+
         internal CommandService _commands;
         internal IServiceProvider _services;
         internal CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig();
         private readonly char prefix = '!';
-        public BotInstance()
+        public BotInstance(string Custom_Guild_Snowflake)
         {
             _client = new Discord.WebSocket.DiscordSocketClient();
             _client.Log += BotLog;
@@ -27,6 +30,11 @@ namespace DiscordBotManager.Bot
             _CommandServiceConfig.DefaultRunMode = RunMode.Async;
             _CommandServiceConfig.IgnoreExtraArgs = true;
             _CommandServiceConfig.LogLevel = LogSeverity.Warning;
+
+            if(Custom_Guild_Snowflake != "")
+            {
+                GUILD_SNOWFLAKE = Convert.ToUInt64(Custom_Guild_Snowflake);
+            }
 
             ConfigureBot();
             RegisterCommandsAsync().GetAwaiter();
@@ -107,7 +115,7 @@ namespace DiscordBotManager.Bot
         /// <returns></returns>
         private Task BotDisconnected(Exception arg)
         {
-            Program.MainWindow.DisableControls();
+            Program.MainWindow.DisableConnectedOnlyControls();
             return Task.CompletedTask;
         }
 
@@ -136,10 +144,29 @@ namespace DiscordBotManager.Bot
         /// <returns></returns>
         private Task BotReady()
         {
-            Output("Bot Is Ready!");
             if (_client.ConnectionState == ConnectionState.Connected)
             {
-                Program.MainWindow.EnableControls();
+                Output("Bot Is Ready!");
+                if(_client.Guilds.Count == 1) 
+                    // if only in one guild, assume snowflake is for that 
+                {
+                    GUILD_SNOWFLAKE = _client.Guilds.First().Id;
+                    Output("Bot in one server, assuming snowflake of " + GUILD_SNOWFLAKE.ToString());
+                }
+                else if(GUILD_SNOWFLAKE == default)
+                {
+                    Output("Bot in multiple servers with no custom snowflake");
+                    _client.LogoutAsync();
+                }
+                else
+                {
+                    Output("Custom snowflake set " + GUILD_SNOWFLAKE);
+                }
+                var guild = _client.GetGuild(GUILD_SNOWFLAKE);
+            }
+            else
+            {
+                Output("Bot signaled ready but connection not established!");
             }
             return Task.CompletedTask;
         }

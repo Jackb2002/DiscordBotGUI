@@ -37,9 +37,7 @@
             this.loadedKey = new System.Windows.Forms.TextBox();
             this.loginBtn = new System.Windows.Forms.Button();
             this.cmdControls = new System.Windows.Forms.GroupBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.addCustomFlake = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.authControls.SuspendLayout();
             this.cmdControls.SuspendLayout();
@@ -137,11 +135,8 @@
             // 
             // cmdControls
             // 
-            this.cmdControls.Controls.Add(this.button4);
-            this.cmdControls.Controls.Add(this.button3);
-            this.cmdControls.Controls.Add(this.button2);
+            this.cmdControls.Controls.Add(this.addCustomFlake);
             this.cmdControls.Controls.Add(this.button1);
-            this.cmdControls.Enabled = false;
             this.cmdControls.Location = new System.Drawing.Point(12, 97);
             this.cmdControls.Name = "cmdControls";
             this.cmdControls.Size = new System.Drawing.Size(493, 101);
@@ -149,41 +144,16 @@
             this.cmdControls.TabStop = false;
             this.cmdControls.Text = "Commands";
             // 
-            // button4
+            // addCustomFlake
             // 
-            this.button4.Font = new System.Drawing.Font("Microsoft YaHei", 8F);
-            this.button4.ForeColor = System.Drawing.Color.Green;
-            this.button4.Location = new System.Drawing.Point(384, 28);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(101, 54);
-            this.button4.TabIndex = 8;
-            this.button4.Text = "Toggle Info Module";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.Button4_Click);
-            // 
-            // button3
-            // 
-            this.button3.Font = new System.Drawing.Font("Microsoft YaHei", 8F);
-            this.button3.ForeColor = System.Drawing.Color.Green;
-            this.button3.Location = new System.Drawing.Point(258, 28);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(101, 54);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "Toggle User Module";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.Button3_Click);
-            // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Microsoft YaHei", 8F);
-            this.button2.ForeColor = System.Drawing.Color.Green;
-            this.button2.Location = new System.Drawing.Point(132, 28);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(101, 54);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "Toggle Admin Module";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.ToggleAdmin);
+            this.addCustomFlake.Font = new System.Drawing.Font("Microsoft YaHei", 8F);
+            this.addCustomFlake.Location = new System.Drawing.Point(119, 28);
+            this.addCustomFlake.Name = "addCustomFlake";
+            this.addCustomFlake.Size = new System.Drawing.Size(101, 54);
+            this.addCustomFlake.TabIndex = 6;
+            this.addCustomFlake.Text = "Enter Custom Guild Snowflake";
+            this.addCustomFlake.UseVisualStyleBackColor = true;
+            this.addCustomFlake.Click += new System.EventHandler(this.addCustomFlake_Click);
             // 
             // button1
             // 
@@ -228,8 +198,6 @@
         private System.Windows.Forms.GroupBox cmdControls;
         private System.Windows.Forms.CheckBox showKeyToggle;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button addCustomFlake;
     }
 }
