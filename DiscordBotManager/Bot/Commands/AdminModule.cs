@@ -15,11 +15,11 @@ namespace DiscordBotManager.Bot.Commands
         {
             if (!enabled)
             {
-                await ReplyAsync("Module Disabled");
+                _ = await ReplyAsync("Module Disabled");
                 return;
             }
             await user.KickAsync(reason);
-            await ReplyAsync("Kicking user");
+            _ = await ReplyAsync("Kicking user");
         }
 
         [Command("ban")]
@@ -28,11 +28,11 @@ namespace DiscordBotManager.Bot.Commands
         {
             if (!enabled)
             {
-                await ReplyAsync("Module Disabled");
+                _ = await ReplyAsync("Module Disabled");
                 return;
             }
             await user.BanAsync(reason: reason);
-            await ReplyAsync("Banning user");
+            _ = await ReplyAsync("Banning user");
         }
     }
 }

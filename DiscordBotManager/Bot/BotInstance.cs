@@ -29,7 +29,7 @@ namespace DiscordBotManager.Bot
             _CommandServiceConfig.LogLevel = LogSeverity.Warning;
 
             ConfigureBot();
-            RegisterCommandsAsync().GetAwaiter();
+            _ = RegisterCommandsAsync().GetAwaiter();
         }
 
         public void UpdateCommandConfig(CommandServiceConfig csc)
@@ -37,7 +37,7 @@ namespace DiscordBotManager.Bot
             _ = _client.LogoutAsync().GetAwaiter();
             _CommandServiceConfig = csc;
             ConfigureBot();
-            RegisterCommandsAsync().GetAwaiter();
+            _ = RegisterCommandsAsync().GetAwaiter();
             _ = Login(Program.MainWindow._KEY).GetAwaiter();
         }
 
@@ -63,7 +63,7 @@ namespace DiscordBotManager.Bot
         public async Task RegisterCommandsAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+            _ = await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
 
         /// <summary>
@@ -73,9 +73,7 @@ namespace DiscordBotManager.Bot
         /// <returns></returns>
         private async Task HandleCommandAsync(SocketMessage arg)
         {
-            SocketUserMessage msg = arg as SocketUserMessage;
-
-            if (msg is null || msg.Author.IsBot)
+            if (!(arg is SocketUserMessage msg) || msg.Author.IsBot)
             {
                 return;
             }
@@ -95,7 +93,7 @@ namespace DiscordBotManager.Bot
                 if (result.IsSuccess == false)
                 {
                     Program.MainWindow.Output(result.ErrorReason);
-                    await msg.Channel.SendMessageAsync(result.ErrorReason);
+                    _ = await msg.Channel.SendMessageAsync(result.ErrorReason);
                 }
             }
         }
@@ -175,7 +173,7 @@ namespace DiscordBotManager.Bot
 
         internal void Logout()
         {
-            _client.LogoutAsync();
+            _ = _client.LogoutAsync();
         }
     }
 }

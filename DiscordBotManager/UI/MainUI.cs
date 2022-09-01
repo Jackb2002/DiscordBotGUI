@@ -40,7 +40,7 @@ namespace DiscordBotManager.UI
             if (System.IO.File.Exists(Program.TOKEN_PATH))
             {
                 string contents = System.IO.File.ReadAllText(Program.TOKEN_PATH).Trim();
-                if (!(string.IsNullOrWhiteSpace(contents)))
+                if (!string.IsNullOrWhiteSpace(contents))
                 {
                     _KEY = contents;
                     loadedKey.Text = _KEY;
@@ -51,7 +51,7 @@ namespace DiscordBotManager.UI
         private void NewkeyBtn_Click(object sender, EventArgs e)
         {
             AuthControls.NewKey form = new AuthControls.NewKey();
-            form.ShowDialog();
+            _ = form.ShowDialog();
             loadedKey.Text = _KEY;
         }
 
@@ -157,12 +157,12 @@ namespace DiscordBotManager.UI
         private void EditCommandConfigWindow(object sender, EventArgs e)
         {
             Form form = new CommandConfigForm(BOT._CommandServiceConfig);
-            form.ShowDialog();
+            _ = form.ShowDialog();
         }
 
         private void MainUI_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(BOT._client.LoginState == Discord.LoginState.LoggedIn)
+            if (BOT._client.LoginState == Discord.LoginState.LoggedIn)
             {
                 Output("Please logout before closing");
                 e.Cancel = true;
