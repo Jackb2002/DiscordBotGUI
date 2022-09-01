@@ -11,10 +11,10 @@ namespace DiscordBotManager.Bot
 {
     public class BotInstance
     {
-        public DiscordSocketClient _client { get; private set; }
-        public CommandService _commands;
-        public IServiceProvider _services;
-        private CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig();
+        internal DiscordSocketClient _client { get; private set; }
+        internal CommandService _commands;
+        internal IServiceProvider _services;
+        internal CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig();
         private readonly char prefix = '!';
         public BotInstance()
         {
@@ -179,3 +179,4 @@ namespace DiscordBotManager.Bot
         }
     }
 }
+

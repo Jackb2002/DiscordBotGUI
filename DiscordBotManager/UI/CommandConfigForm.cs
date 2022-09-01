@@ -6,8 +6,10 @@ namespace DiscordBotManager.UI
 {
     public partial class CommandConfigForm : Form
     {
-        public CommandConfigForm()
+        private CommandServiceConfig CSC;
+        public CommandConfigForm(CommandServiceConfig currentCSC)
         {
+            CSC = currentCSC;
             InitializeComponent();
         }
 
@@ -40,6 +42,14 @@ namespace DiscordBotManager.UI
                 _CommandServiceConfig.LogLevel = Discord.LogSeverity.Warning;
             }
             Program.MainWindow.BOT.UpdateCommandConfig(_CommandServiceConfig);
+        }
+
+        private void CommandConfigForm_Load(object sender, EventArgs e)
+        {
+            caseCheck.Checked = CSC.CaseSensitiveCommands;
+            logVerbose.Checked = CSC.LogLevel == Discord.LogSeverity.Verbose ? true : false;
+            runModeAsync.Checked = CSC.DefaultRunMode == RunMode.Async ? true : false;
+            ignoreChars.Checked = CSC.IgnoreExtraArgs;
         }
     }
 }

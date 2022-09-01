@@ -156,7 +156,7 @@ namespace DiscordBotManager.UI
 
         private void EditCommandConfigWindow(object sender, EventArgs e)
         {
-            Form form = new CommandConfigForm();
+            Form form = new CommandConfigForm(BOT._CommandServiceConfig);
             form.ShowDialog();
         }
 

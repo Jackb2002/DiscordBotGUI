@@ -110,6 +110,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "CommandConfigForm";
             this.Text = "Change Command Config";
+            this.Load += new System.EventHandler(this.CommandConfigForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
