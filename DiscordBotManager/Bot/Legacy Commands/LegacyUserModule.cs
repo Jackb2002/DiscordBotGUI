@@ -3,8 +3,9 @@
 namespace DiscordBotManager.Bot.Commands
 {
     [Group]
-    public class InfoModule : ModuleBase<SocketCommandContext>
+    public class LegacyUserModule : ModuleBase<SocketCommandContext>
     {
         public static bool enabled = true;
+
     }
 }

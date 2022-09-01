@@ -6,7 +6,7 @@ namespace DiscordBotManager.UI
 {
     public partial class CommandConfigForm : Form
     {
-        private readonly CommandServiceConfig CSC;
+        private CommandServiceConfig CSC;
         public CommandConfigForm(CommandServiceConfig currentCSC)
         {
             CSC = currentCSC;
@@ -23,18 +23,32 @@ namespace DiscordBotManager.UI
             CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig
             {
                 CaseSensitiveCommands = caseCheck.Checked,
-                IgnoreExtraArgs = ignoreChars.Checked,
-                DefaultRunMode = runModeAsync.Checked ? RunMode.Async : RunMode.Sync,
-                LogLevel = logVerbose.Checked ? Discord.LogSeverity.Verbose : Discord.LogSeverity.Warning
+                IgnoreExtraArgs = ignoreChars.Checked
             };
+            if (runModeAsync.Checked)
+            {
+                _CommandServiceConfig.DefaultRunMode = RunMode.Async;
+            }
+            else
+            {
+                _CommandServiceConfig.DefaultRunMode = RunMode.Sync;
+            }
+            if (logVerbose.Checked)
+            {
+                _CommandServiceConfig.LogLevel = Discord.LogSeverity.Verbose;
+            }
+            else
+            {
+                _CommandServiceConfig.LogLevel = Discord.LogSeverity.Warning;
+            }
             Program.MainWindow.BOT.UpdateCommandConfig(_CommandServiceConfig);
         }
 
         private void CommandConfigForm_Load(object sender, EventArgs e)
         {
             caseCheck.Checked = CSC.CaseSensitiveCommands;
-            logVerbose.Checked = CSC.LogLevel == Discord.LogSeverity.Verbose;
-            runModeAsync.Checked = CSC.DefaultRunMode == RunMode.Async;
+            logVerbose.Checked = CSC.LogLevel == Discord.LogSeverity.Verbose ? true : false;
+            runModeAsync.Checked = CSC.DefaultRunMode == RunMode.Async ? true : false;
             ignoreChars.Checked = CSC.IgnoreExtraArgs;
         }
     }

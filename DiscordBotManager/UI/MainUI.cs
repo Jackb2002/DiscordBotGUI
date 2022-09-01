@@ -40,7 +40,7 @@ namespace DiscordBotManager.UI
             if (System.IO.File.Exists(Program.TOKEN_PATH))
             {
                 string contents = System.IO.File.ReadAllText(Program.TOKEN_PATH).Trim();
-                if (!string.IsNullOrWhiteSpace(contents))
+                if (!(string.IsNullOrWhiteSpace(contents)))
                 {
                     _KEY = contents;
                     loadedKey.Text = _KEY;
@@ -51,7 +51,7 @@ namespace DiscordBotManager.UI
         private void NewkeyBtn_Click(object sender, EventArgs e)
         {
             AuthControls.NewKey form = new AuthControls.NewKey();
-            _ = form.ShowDialog();
+            form.ShowDialog();
             loadedKey.Text = _KEY;
         }
 
@@ -108,8 +108,8 @@ namespace DiscordBotManager.UI
 
         private void ToggleAdmin(object sender, EventArgs e)
         {
-            bool enabled = Bot.Commands.AdminModule.enabled;
-            Bot.Commands.AdminModule.enabled = !enabled;
+            bool enabled = Bot.Commands.LegacyAdminModule.enabled;
+            Bot.Commands.LegacyAdminModule.enabled = !enabled;
 
             if (enabled)
             {
@@ -124,8 +124,8 @@ namespace DiscordBotManager.UI
 
         private void Button3_Click(object sender, EventArgs e)
         {
-            bool enabled = Bot.Commands.UserModule.enabled;
-            Bot.Commands.UserModule.enabled = !enabled;
+            bool enabled = Bot.Commands.LegacyUserModule.enabled;
+            Bot.Commands.LegacyUserModule.enabled = !enabled;
 
             if (enabled)
             {
@@ -140,8 +140,8 @@ namespace DiscordBotManager.UI
 
         private void Button4_Click(object sender, EventArgs e)
         {
-            bool enabled = Bot.Commands.InfoModule.enabled;
-            Bot.Commands.InfoModule.enabled = !enabled;
+            bool enabled = Bot.Commands.LegacyInfoModule.enabled;
+            Bot.Commands.LegacyInfoModule.enabled = !enabled;
 
             if (enabled)
             {
@@ -157,7 +157,7 @@ namespace DiscordBotManager.UI
         private void EditCommandConfigWindow(object sender, EventArgs e)
         {
             Form form = new CommandConfigForm(BOT._CommandServiceConfig);
-            _ = form.ShowDialog();
+            form.ShowDialog();
         }
 
         private void MainUI_FormClosing(object sender, FormClosingEventArgs e)

@@ -6,7 +6,7 @@ namespace DiscordBotManager.Bot.Commands
 {
     [Group]
     [RequireBotPermission(Discord.GuildPermission.Administrator)]
-    public class AdminModule : ModuleBase<SocketCommandContext>
+    public class LegacyAdminModule : ModuleBase<SocketCommandContext>
     {
         public static bool enabled = true;
         [Command("kick")]
@@ -15,11 +15,11 @@ namespace DiscordBotManager.Bot.Commands
         {
             if (!enabled)
             {
-                _ = await ReplyAsync("Module Disabled");
+                await ReplyAsync("Module Disabled");
                 return;
             }
             await user.KickAsync(reason);
-            _ = await ReplyAsync("Kicking user");
+            await ReplyAsync("Kicking user");
         }
 
         [Command("ban")]
@@ -28,11 +28,11 @@ namespace DiscordBotManager.Bot.Commands
         {
             if (!enabled)
             {
-                _ = await ReplyAsync("Module Disabled");
+                await ReplyAsync("Module Disabled");
                 return;
             }
             await user.BanAsync(reason: reason);
-            _ = await ReplyAsync("Banning user");
+            await ReplyAsync("Banning user");
         }
     }
 }

@@ -12,31 +12,24 @@ namespace DiscordBotManager.Bot
     public class BotInstance
     {
         internal DiscordSocketClient _client { get; private set; }
-        internal CommandService _commands { get; private set; }
-        internal IServiceProvider _services { get; private set; }
-        internal CommandServiceConfig _CommandServiceConfig{ get; private set; }
-        internal DiscordSocketConfig _config { get; private set; }
+        internal CommandService _commands;
+        internal IServiceProvider _services;
+        internal CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig();
         private readonly char prefix = '!';
         public BotInstance()
         {
-            _config = new DiscordSocketConfig()
-            {
-                GatewayIntents = GatewayIntents.AllUnprivileged
-            };
-
-            _client = new DiscordSocketClient(_config);
+            _client = new Discord.WebSocket.DiscordSocketClient();
             _client.Log += BotLog;
             _client.Ready += BotReady;
             _client.Disconnected += BotDisconnected;
 
-            _CommandServiceConfig = new CommandServiceConfig();
             _CommandServiceConfig.CaseSensitiveCommands = false;
             _CommandServiceConfig.DefaultRunMode = RunMode.Async;
             _CommandServiceConfig.IgnoreExtraArgs = true;
             _CommandServiceConfig.LogLevel = LogSeverity.Warning;
 
             ConfigureBot();
-            _ = RegisterCommandsAsync().GetAwaiter();
+            RegisterCommandsAsync().GetAwaiter();
         }
 
         public void UpdateCommandConfig(CommandServiceConfig csc)
@@ -44,7 +37,7 @@ namespace DiscordBotManager.Bot
             _ = _client.LogoutAsync().GetAwaiter();
             _CommandServiceConfig = csc;
             ConfigureBot();
-            _ = RegisterCommandsAsync().GetAwaiter();
+            RegisterCommandsAsync().GetAwaiter();
             _ = Login(Program.MainWindow._KEY).GetAwaiter();
         }
 
@@ -70,7 +63,7 @@ namespace DiscordBotManager.Bot
         public async Task RegisterCommandsAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
-            _ = await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
 
         /// <summary>
@@ -80,7 +73,9 @@ namespace DiscordBotManager.Bot
         /// <returns></returns>
         private async Task HandleCommandAsync(SocketMessage arg)
         {
-            if (!(arg is SocketUserMessage msg) || msg.Author.IsBot)
+            SocketUserMessage msg = arg as SocketUserMessage;
+
+            if (msg is null || msg.Author.IsBot)
             {
                 return;
             }
@@ -100,7 +95,7 @@ namespace DiscordBotManager.Bot
                 if (result.IsSuccess == false)
                 {
                     Program.MainWindow.Output(result.ErrorReason);
-                    _ = await msg.Channel.SendMessageAsync(result.ErrorReason);
+                    await msg.Channel.SendMessageAsync(result.ErrorReason);
                 }
             }
         }
@@ -180,7 +175,7 @@ namespace DiscordBotManager.Bot
 
         internal void Logout()
         {
-            _ = _client.LogoutAsync();
+            _client.LogoutAsync();
         }
     }
 }
