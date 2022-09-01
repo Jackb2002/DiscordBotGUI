@@ -12,17 +12,24 @@ namespace DiscordBotManager.Bot
     public class BotInstance
     {
         internal DiscordSocketClient _client { get; private set; }
-        internal CommandService _commands;
-        internal IServiceProvider _services;
-        internal CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig();
+        internal CommandService _commands { get; private set; }
+        internal IServiceProvider _services { get; private set; }
+        internal CommandServiceConfig _CommandServiceConfig{ get; private set; }
+        internal DiscordSocketConfig _config { get; private set; }
         private readonly char prefix = '!';
         public BotInstance()
         {
-            _client = new Discord.WebSocket.DiscordSocketClient();
+            _config = new DiscordSocketConfig()
+            {
+                GatewayIntents = GatewayIntents.AllUnprivileged
+            };
+
+            _client = new DiscordSocketClient(_config);
             _client.Log += BotLog;
             _client.Ready += BotReady;
             _client.Disconnected += BotDisconnected;
 
+            _CommandServiceConfig = new CommandServiceConfig();
             _CommandServiceConfig.CaseSensitiveCommands = false;
             _CommandServiceConfig.DefaultRunMode = RunMode.Async;
             _CommandServiceConfig.IgnoreExtraArgs = true;
