@@ -19,6 +19,14 @@ namespace DiscordBotManager.UI.AuthControls
                 Debug.WriteLine("Creating folder " + Path.GetDirectoryName(Program.FLAKE_PATH));
             }
             Program.MainWindow._FLAKE = textBox1.Text.Trim();
+            if (!Directory.Exists(Path.GetDirectoryName(Program.FLAKE_PATH)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(Program.FLAKE_PATH));
+            }
+            if (!File.Exists(Program.FLAKE_PATH))
+            {
+                File.Create(Program.FLAKE_PATH);
+            }
             File.WriteAllLines(Program.FLAKE_PATH, new string[] { Program.MainWindow._FLAKE });
             Close();
         }
