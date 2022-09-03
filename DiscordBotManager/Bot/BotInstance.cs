@@ -148,9 +148,9 @@ namespace DiscordBotManager.Bot
             Program.MainWindow.Output(Message);
         }
 
-        internal void Logout()
+        internal async Task Logout()
         {
-            _client.LogoutAsync();
+            await _client.LogoutAsync();
         }
     }
 }

@@ -75,6 +75,7 @@ namespace DiscordBotManager.UI
                 Output("No Key Loaded");
                 return;
             }
+            Output("Logging in with key");
             _ = BOT.Login(_KEY);
         }
 
@@ -95,7 +96,9 @@ namespace DiscordBotManager.UI
 
         private void LogoutBtn_Click(object sender, EventArgs e)
         {
+            Output("Logging out");
             BOT.Logout();
+            Output("Logged out");
         }
 
         private void OutputConsole_VisibleChanged(object sender, EventArgs e)
@@ -122,9 +125,14 @@ namespace DiscordBotManager.UI
         {
             if (BOT._client.LoginState == Discord.LoginState.LoggedIn)
             {
-                Output("Please logout before closing");
-                e.Cancel = true;
-                return;
+                Output("Logging out before closing");
+                BOT.Logout().GetAwaiter().GetResult();
+                if(BOT._client.LoginState != Discord.LoginState.LoggedOut)
+                {
+                    Output("Failed to log out!");
+                    e.Cancel = true;
+                    return;
+                }
             }
         }
 
