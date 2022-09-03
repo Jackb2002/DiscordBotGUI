@@ -30,6 +30,8 @@ namespace DiscordBotManager.UI
             BOT = new Bot.BotInstance(_FLAKE);
             Output("Created");
             CheckSavedKeys();
+            Output("Attempting auto-login");
+            LoginBtn_Click(sender,e);
         }
 
         /// <summary>

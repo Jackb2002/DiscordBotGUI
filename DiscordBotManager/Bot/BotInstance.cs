@@ -23,6 +23,7 @@ namespace DiscordBotManager.Bot
         { 
             _client = new Discord.WebSocket.DiscordSocketClient();
             _client.Ready += BotReady;
+            _client.SlashCommandExecuted += SlashCommandHandler;
 
             if (Custom_Guild_Snowflake != "")
             {
