@@ -1,12 +1,16 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DiscordBotManager.Bot
 {
@@ -15,97 +19,15 @@ namespace DiscordBotManager.Bot
         internal DiscordSocketClient _client { get; private set; }
         public static ulong GUILD_SNOWFLAKE { get; private set; }
 
-        internal CommandService _commands;
-        internal IServiceProvider _services;
-        internal CommandServiceConfig _CommandServiceConfig = new CommandServiceConfig();
-        private readonly char prefix = '!';
         public BotInstance(string Custom_Guild_Snowflake)
-        {
+        { 
             _client = new Discord.WebSocket.DiscordSocketClient();
-            _client.Log += BotLog;
             _client.Ready += BotReady;
-            _client.Disconnected += BotDisconnected;
 
-            _CommandServiceConfig.CaseSensitiveCommands = false;
-            _CommandServiceConfig.DefaultRunMode = RunMode.Async;
-            _CommandServiceConfig.IgnoreExtraArgs = true;
-            _CommandServiceConfig.LogLevel = LogSeverity.Warning;
-
-            if(Custom_Guild_Snowflake != "")
+            if (Custom_Guild_Snowflake != "")
             {
                 GUILD_SNOWFLAKE = Convert.ToUInt64(Custom_Guild_Snowflake);
-            }
-
-            ConfigureBot();
-            LegacyRegisterCommandsAsync().GetAwaiter();
-        }
-
-        public void UpdateCommandConfig(CommandServiceConfig csc)
-        {
-            _ = _client.LogoutAsync().GetAwaiter();
-            _CommandServiceConfig = csc;
-            ConfigureBot();
-            //LegacyRegisterCommandsAsync().GetAwaiter();
-            _ = Login(Program.MainWindow._KEY).GetAwaiter();
-        }
-
-        /// <summary>
-        /// Builds service provider and command service is created
-        /// </summary>
-        private void ConfigureBot()
-        {
-            _commands = new CommandService(_CommandServiceConfig);
-
-            _services = new ServiceCollection()
-                .AddSingleton(_client)
-                .AddSingleton(_commands)
-                .BuildServiceProvider();
-
-            Program.MainWindow.Output("Created new bot profile...");
-        }
-
-        /// <summary>
-        /// Register Commands And Add Msg Handler
-        /// </summary>
-        /// <returns></returns>
-        public async Task LegacyRegisterCommandsAsync()
-        {
-            _client.MessageReceived += LegacyClientRecievedMessage;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
-        }
-
-        /// <summary>
-        /// Handle a user message event
-        /// </summary>
-        /// <param name="arg"></param>
-        /// <returns></returns>
-        private async Task LegacyClientRecievedMessage(SocketMessage arg)
-        {
-            SocketUserMessage msg = arg as SocketUserMessage;
-
-            if (msg is null || msg.Author.IsBot)
-            {
-                return;
-            }
-
-            int argPos = 0;
-
-            if (msg.HasStringPrefix(prefix.ToString(), ref argPos)
-                || msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
-            {
-                SocketCommandContext context = new SocketCommandContext(_client, msg);
-
-                Debug.WriteLine(context.Message);
-                Debug.WriteLine(context.ToString());
-
-                IResult result = await _commands.ExecuteAsync(context, argPos, _services);
-
-                if (result.IsSuccess == false)
-                {
-                    Program.MainWindow.Output(result.ErrorReason);
-                    await msg.Channel.SendMessageAsync(result.ErrorReason);
-                }
-            }
+            }    
         }
 
         /// <summary>
@@ -113,7 +35,7 @@ namespace DiscordBotManager.Bot
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private Task BotDisconnected(Exception arg)
+        public Task BotDisconnected(Exception arg)
         {
             Program.MainWindow.DisableConnectedOnlyControls();
             return Task.CompletedTask;
@@ -142,33 +64,59 @@ namespace DiscordBotManager.Bot
         /// Executed when bot is ready to use
         /// </summary>
         /// <returns></returns>
-        private Task BotReady()
+        public async Task BotReady()
         {
             if (_client.ConnectionState == ConnectionState.Connected)
             {
                 Output("Bot Is Ready!");
-                if(_client.Guilds.Count == 1) 
-                    // if only in one guild, assume snowflake is for that 
+                SetupSnowflake();
+
+                SlashCommandBuilder guildCommand = new SlashCommandBuilder()
+                    .WithName("list-roles")
+                    .WithDescription("Lists all roles of a user.")
+                    .AddOption("user", ApplicationCommandOptionType.User, 
+                    "The users whos roles you want to be listed", isRequired: true);
+                
+                try
                 {
-                    GUILD_SNOWFLAKE = _client.Guilds.First().Id;
-                    Output("Bot in one server, assuming snowflake of " + GUILD_SNOWFLAKE.ToString());
+                    await _client.Rest.CreateGuildCommand(guildCommand.Build(), GUILD_SNOWFLAKE);
                 }
-                else if(GUILD_SNOWFLAKE == default)
+                catch (HttpException exception)
                 {
-                    Output("Bot in multiple servers with no custom snowflake");
-                    _client.LogoutAsync();
+                    var json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
+                    Console.WriteLine(json);
                 }
-                else
-                {
-                    Output("Custom snowflake set " + GUILD_SNOWFLAKE);
-                }
-                var guild = _client.GetGuild(GUILD_SNOWFLAKE);
+
             }
             else
             {
                 Output("Bot signaled ready but connection not established!");
             }
-            return Task.CompletedTask;
+            return;
+        }
+
+        private void SetupSnowflake()
+        {
+            if (_client.Guilds.Count == 1)
+            // if only in one guild, assume snowflake is for that 
+            {
+                GUILD_SNOWFLAKE = _client.Guilds.First().Id;
+                Output("Bot in one server, assuming snowflake of " + GUILD_SNOWFLAKE.ToString());
+            }
+            else if (GUILD_SNOWFLAKE == default)
+            {
+                Output("Bot in multiple servers with no custom snowflake");
+                _client.LogoutAsync();
+            }
+            else
+            {
+                Output("Custom snowflake set " + GUILD_SNOWFLAKE);
+            }
+        }
+
+        private async Task SlashCommandHandler(SocketSlashCommand command)
+        {
+            await command.RespondAsync("Executing " + command.Data.Name);
         }
 
         /// <summary>
@@ -176,7 +124,7 @@ namespace DiscordBotManager.Bot
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private Task BotLog(LogMessage arg)
+        public Task BotLog(LogMessage arg)
         {
             Output("Bot Logged : " + arg.Message);
             return Task.CompletedTask;

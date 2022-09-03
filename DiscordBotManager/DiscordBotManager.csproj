@@ -258,12 +258,6 @@
     <Compile Include="UI\AuthControls\NewKey.Designer.cs">
       <DependentUpon>NewKey.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\CommandConfigForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\CommandConfigForm.Designer.cs">
-      <DependentUpon>CommandConfigForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\MainUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -284,9 +278,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\AuthControls\NewKey.resx">
       <DependentUpon>NewKey.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\CommandConfigForm.resx">
-      <DependentUpon>CommandConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MainUI.resx">
       <DependentUpon>MainUI.cs</DependentUpon>

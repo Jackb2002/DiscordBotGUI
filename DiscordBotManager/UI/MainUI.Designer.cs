@@ -36,11 +36,10 @@
             this.keyLabel = new System.Windows.Forms.Label();
             this.loadedKey = new System.Windows.Forms.TextBox();
             this.loginBtn = new System.Windows.Forms.Button();
-            this.cmdControls = new System.Windows.Forms.GroupBox();
+            this.gldControls = new System.Windows.Forms.GroupBox();
             this.addCustomFlake = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.authControls.SuspendLayout();
-            this.cmdControls.SuspendLayout();
+            this.gldControls.SuspendLayout();
             this.SuspendLayout();
             // 
             // outputConsole
@@ -133,21 +132,20 @@
             this.loginBtn.UseVisualStyleBackColor = true;
             this.loginBtn.Click += new System.EventHandler(this.LoginBtn_Click);
             // 
-            // cmdControls
+            // gldControls
             // 
-            this.cmdControls.Controls.Add(this.addCustomFlake);
-            this.cmdControls.Controls.Add(this.button1);
-            this.cmdControls.Location = new System.Drawing.Point(12, 97);
-            this.cmdControls.Name = "cmdControls";
-            this.cmdControls.Size = new System.Drawing.Size(493, 101);
-            this.cmdControls.TabIndex = 5;
-            this.cmdControls.TabStop = false;
-            this.cmdControls.Text = "Commands";
+            this.gldControls.Controls.Add(this.addCustomFlake);
+            this.gldControls.Location = new System.Drawing.Point(12, 97);
+            this.gldControls.Name = "gldControls";
+            this.gldControls.Size = new System.Drawing.Size(493, 84);
+            this.gldControls.TabIndex = 5;
+            this.gldControls.TabStop = false;
+            this.gldControls.Text = "Guild";
             // 
             // addCustomFlake
             // 
             this.addCustomFlake.Font = new System.Drawing.Font("Microsoft YaHei", 8F);
-            this.addCustomFlake.Location = new System.Drawing.Point(119, 28);
+            this.addCustomFlake.Location = new System.Drawing.Point(6, 19);
             this.addCustomFlake.Name = "addCustomFlake";
             this.addCustomFlake.Size = new System.Drawing.Size(101, 54);
             this.addCustomFlake.TabIndex = 6;
@@ -155,23 +153,12 @@
             this.addCustomFlake.UseVisualStyleBackColor = true;
             this.addCustomFlake.Click += new System.EventHandler(this.addCustomFlake_Click);
             // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Microsoft YaHei", 8F);
-            this.button1.Location = new System.Drawing.Point(6, 28);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(101, 54);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Edit Command Config";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.EditCommandConfigWindow);
-            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.cmdControls);
+            this.Controls.Add(this.gldControls);
             this.Controls.Add(this.authControls);
             this.Controls.Add(this.outputConsole);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -181,7 +168,7 @@
             this.Load += new System.EventHandler(this.MainUI_Load);
             this.authControls.ResumeLayout(false);
             this.authControls.PerformLayout();
-            this.cmdControls.ResumeLayout(false);
+            this.gldControls.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -195,9 +182,8 @@
         private System.Windows.Forms.TextBox loadedKey;
         private System.Windows.Forms.Button logoutBtn;
         private System.Windows.Forms.Button newkeyBtn;
-        private System.Windows.Forms.GroupBox cmdControls;
+        private System.Windows.Forms.GroupBox gldControls;
         private System.Windows.Forms.CheckBox showKeyToggle;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button addCustomFlake;
     }
 }

@@ -118,13 +118,6 @@ namespace DiscordBotManager.UI
                 loadedKey.PasswordChar = '\x0'; // empty
             }
         }
-
-        private void EditCommandConfigWindow(object sender, EventArgs e)
-        {
-            Form form = new CommandConfigForm(BOT._CommandServiceConfig);
-            form.ShowDialog();
-        }
-
         private void MainUI_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (BOT._client.LoginState == Discord.LoginState.LoggedIn)
