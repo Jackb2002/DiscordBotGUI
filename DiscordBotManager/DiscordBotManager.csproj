@@ -244,6 +244,7 @@
     <Compile Include="Bot\Legacy Commands\LegacyInfoModule.cs" />
     <Compile Include="Bot\Legacy Commands\LegacyUserModule.cs" />
     <Compile Include="Bot\Legacy Commands\LegacyAdminModule.cs" />
+    <Compile Include="Bot\Modules\Moderation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\AuthControls\NewSnowflake.cs">

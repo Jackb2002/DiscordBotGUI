@@ -127,14 +127,9 @@ namespace DiscordBotManager.UI
         {
             if (BOT._client.LoginState == Discord.LoginState.LoggedIn)
             {
-                Output("Logging out before closing");
-                BOT.Logout().GetAwaiter().GetResult();
-                if(BOT._client.LoginState != Discord.LoginState.LoggedOut)
-                {
-                    Output("Failed to log out!");
-                    e.Cancel = true;
-                    return;
-                }
+                Output("Unable to close, still logged in");
+                e.Cancel = true;
+                return;
             }
         }
 

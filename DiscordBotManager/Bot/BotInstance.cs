@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
+using DiscordBotManager.Bot.Modules;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
@@ -117,7 +118,15 @@ namespace DiscordBotManager.Bot
 
         private async Task SlashCommandHandler(SocketSlashCommand command)
         {
-            await command.RespondAsync("Executing " + command.Data.Name);
+            Output("Executing " + command.Data.Name + " In server " + command.GuildId);
+            switch (command.CommandName)
+            {
+                case "list-roles":
+                    await Moderation.list_roles(command);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
