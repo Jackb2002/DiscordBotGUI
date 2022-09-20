@@ -59,7 +59,6 @@ namespace DiscordBotManager.Bot
             // Block the program until it is closed.
 
             await Task.Delay(-1);
-
         }
 
         /// <summary>
@@ -73,22 +72,27 @@ namespace DiscordBotManager.Bot
                 Output("Bot Is Ready!");
                 SetupSnowflake();
 
-                SlashCommandBuilder guildCommand = new SlashCommandBuilder()
-                    .WithName("list-roles")
-                    .WithDescription("Lists all roles of a user.")
-                    .AddOption("user", ApplicationCommandOptionType.User, 
-                    "The users whos roles you want to be listed", isRequired: true);
-                
+                #region Moderation commands
+                SlashCommandBuilder list_roles = Moderation.GenerateListRolesCommand();
+                SlashCommandBuilder get_avatar_url = Moderation.GenerateAvatarUrlCommand();
+                SlashCommandBuilder prune_messages = Moderation.GeneratePruneCommand();
+
+                #endregion
+
                 try
                 {
-                    await _client.Rest.CreateGuildCommand(guildCommand.Build(), GUILD_SNOWFLAKE);
+                    await _client.Rest.BulkOverwriteGuildCommands(new[]
+                    {
+                        prune_messages.Build(),
+                        get_avatar_url.Build(),
+                        list_roles.Build()
+                    }, GUILD_SNOWFLAKE);
                 }
                 catch (HttpException exception)
                 {
                     var json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
                     Console.WriteLine(json);
                 }
-
             }
             else
             {
@@ -123,6 +127,12 @@ namespace DiscordBotManager.Bot
             {
                 case "list-roles":
                     await Moderation.list_roles(command);
+                    break;
+                case "get_avatar_url":
+                    await Moderation.get_avatar_url(command);
+                    break;
+                case "prune_messages":
+                    await Moderation.prune_messages(command);
                     break;
                 default:
                     break;

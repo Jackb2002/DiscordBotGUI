@@ -77,6 +77,12 @@ namespace DiscordBotManager.UI
                 Output("No Key Loaded");
                 return;
             }
+            if(BOT._client.LoginState == Discord.LoginState.LoggingIn 
+                || BOT._client.LoginState == Discord.LoginState.LoggedIn)
+            {
+                Output("Already logging/logged in");
+                return;
+            }
             Output("Logging in with key");
             _ = BOT.Login(_KEY);
         }
@@ -99,7 +105,7 @@ namespace DiscordBotManager.UI
         private void LogoutBtn_Click(object sender, EventArgs e)
         {
             Output("Logging out");
-            BOT.Logout();
+            BOT.Logout().GetAwaiter().GetResult();
             Output("Logged out");
         }
 
