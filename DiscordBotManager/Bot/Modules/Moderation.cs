@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBotManager.Bot.Modules
@@ -19,10 +18,10 @@ namespace DiscordBotManager.Bot.Modules
         {
             try
             {
-                var guildUser = (SocketGuildUser)command.Data.Options.First().Value;
-                var roles = string.Join("\n", guildUser.Roles.Where(x => !x.IsEveryone).Select(x => x.Mention));
+                SocketGuildUser guildUser = (SocketGuildUser)command.Data.Options.First().Value;
+                string roles = string.Join("\n", guildUser.Roles.Where(x => !x.IsEveryone).Select(x => x.Mention));
 
-                var embedBuilder = new EmbedBuilder()
+                EmbedBuilder embedBuilder = new EmbedBuilder()
                     .WithAuthor(guildUser.ToString(), guildUser.GetAvatarUrl() ?? guildUser.GetDefaultAvatarUrl())
                     .WithTitle("Roles")
                     .WithDescription(roles)
@@ -40,9 +39,9 @@ namespace DiscordBotManager.Bot.Modules
         {
             try
             {
-                var guildUser = (SocketGuildUser)command.Data.Options.First().Value;
+                SocketGuildUser guildUser = (SocketGuildUser)command.Data.Options.First().Value;
                 string avatar_url = guildUser.GetAvatarUrl() ?? guildUser.GetDefaultAvatarUrl();
-                var embedBuilder = new EmbedBuilder()
+                EmbedBuilder embedBuilder = new EmbedBuilder()
                     .WithAuthor(guildUser.ToString(), avatar_url)
                     .WithTitle("Avatar URL")
                     .WithDescription(avatar_url)
@@ -60,33 +59,26 @@ namespace DiscordBotManager.Bot.Modules
         {
             try
             {
-                var channel = command.Channel;
-                var messages = await channel.GetMessagesAsync(1000).FlattenAsync();
+                ISocketMessageChannel channel = command.Channel;
+                IEnumerable<IMessage> messages = await channel.GetMessagesAsync(1000).FlattenAsync();
 
-                var args = command.Data.Options.ToList();
-                var user = args.FirstOrDefault(x => x.Name == "user").Value as SocketGuildUser;
-                var hours = args.FirstOrDefault(x => x.Name == "hours");
-                
-                IEnumerable<IMessage> messagesToDelete;
-                
-                if (hours != default)
-                {
-                    messagesToDelete = messages.Where
+                List<SocketSlashCommandDataOption> args = command.Data.Options.ToList();
+                SocketGuildUser user = args.FirstOrDefault(x => x.Name == "user").Value as SocketGuildUser;
+                SocketSlashCommandDataOption hours = args.FirstOrDefault(x => x.Name == "hours");
+
+                IEnumerable<IMessage> messagesToDelete = hours != default
+                    ? messages.Where
                     (x => (DateTimeOffset.UtcNow - x.Timestamp).TotalHours > (int)hours.Value
-                    && x.Author.Id == user.Id);
-                }
-                else
-                {
-                    messagesToDelete = messages.Where(x => x.Author.Id == user.Id);
-                }
-
-                foreach (var message in messagesToDelete)
+                    && x.Author.Id == user.Id)
+                    : messages.Where(x => x.Author.Id == user.Id);
+                foreach (IMessage message in messagesToDelete)
                 {
                     await channel.DeleteMessageAsync(message);
                 }
 
                 await command.RespondAsync("Pruned " + messagesToDelete.Count() + " messages", ephemeral: true);
-            }catch(Exception error)
+            }
+            catch (Exception error)
             {
                 await command.RespondAsync("Error: " + error.Message, ephemeral: true);
             }
@@ -96,10 +88,9 @@ namespace DiscordBotManager.Bot.Modules
         {
             try
             {
-                var args = command.Data.Options.ToList();
-                var user = args.FirstOrDefault(x => x.Name == "user").Value as SocketGuildUser;
-                var reason = args.FirstOrDefault(x => x.Name == "reason").Value as string;
-                if(reason == null)
+                List<SocketSlashCommandDataOption> args = command.Data.Options.ToList();
+                SocketGuildUser user = args.FirstOrDefault(x => x.Name == "user").Value as SocketGuildUser;
+                if (!(args.FirstOrDefault(x => x.Name == "reason").Value is string reason))
                 {
                     reason = "No reason provided";
                 }
@@ -159,9 +150,10 @@ namespace DiscordBotManager.Bot.Modules
                 .WithDescription("Kick a user from the server")
                 .AddOption("user", ApplicationCommandOptionType.User,
                                    "The user you want to kick", isRequired: true)
-                .AddOption("reason", ApplicationCommandOptionType.String, 
-                "The reason for kicking the user",isRequired: false);
-            }catch (Exception e)
+                .AddOption("reason", ApplicationCommandOptionType.String,
+                "The reason for kicking the user", isRequired: false);
+            }
+            catch (Exception e)
             {
                 Debug.WriteLine(e);
                 throw;

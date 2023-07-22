@@ -21,11 +21,11 @@ namespace DiscordBotManager.UI.AuthControls
             Program.MainWindow._KEY = textBox1.Text.Trim();
             if (!Directory.Exists(Path.GetDirectoryName(Program.TOKEN_PATH)))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(Program.TOKEN_PATH));
+                _ = Directory.CreateDirectory(Path.GetDirectoryName(Program.TOKEN_PATH));
             }
             if (!File.Exists(Program.TOKEN_PATH))
             {
-                File.Create(Program.TOKEN_PATH);
+                _ = File.Create(Program.TOKEN_PATH);
             }
             File.WriteAllLines(Program.TOKEN_PATH, new string[] { Program.MainWindow._KEY });
             Close();

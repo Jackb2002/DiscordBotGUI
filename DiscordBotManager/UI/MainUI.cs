@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace DiscordBotManager.UI
@@ -31,7 +30,7 @@ namespace DiscordBotManager.UI
             Output("Created");
             CheckSavedKeys();
             Output("Attempting auto-login");
-            LoginBtn_Click(sender,e);
+            LoginBtn_Click(sender, e);
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace DiscordBotManager.UI
             if (System.IO.File.Exists(Program.TOKEN_PATH))
             {
                 string contents = System.IO.File.ReadAllText(Program.TOKEN_PATH).Trim();
-                if (!(string.IsNullOrWhiteSpace(contents)))
+                if (!string.IsNullOrWhiteSpace(contents))
                 {
                     Output("Found key");
                     _KEY = contents;
@@ -55,7 +54,7 @@ namespace DiscordBotManager.UI
             if (System.IO.File.Exists(Program.FLAKE_PATH))
             {
                 string contents = System.IO.File.ReadAllText(Program.FLAKE_PATH).Trim();
-                if (!(string.IsNullOrWhiteSpace(contents)))
+                if (!string.IsNullOrWhiteSpace(contents))
                 {
                     Output("Found Snowflake");
                     _FLAKE = contents;
@@ -66,7 +65,7 @@ namespace DiscordBotManager.UI
         private void NewkeyBtn_Click(object sender, EventArgs e)
         {
             AuthControls.NewKey form = new AuthControls.NewKey();
-            form.ShowDialog();
+            _ = form.ShowDialog();
             loadedKey.Text = _KEY;
         }
 
@@ -77,7 +76,7 @@ namespace DiscordBotManager.UI
                 Output("No Key Loaded");
                 return;
             }
-            if(BOT._client.LoginState == Discord.LoginState.LoggingIn 
+            if (BOT._client.LoginState == Discord.LoginState.LoggingIn
                 || BOT._client.LoginState == Discord.LoginState.LoggedIn)
             {
                 Output("Already logging/logged in");
@@ -92,14 +91,14 @@ namespace DiscordBotManager.UI
         /// </summary>
         public void EnableConnectedOnlyControls()
         {
-            
+
         }
         /// <summary>
         /// Should be run to enable all controls only avalible when client is disconnected
         /// </summary>
         public void DisableConnectedOnlyControls()
         {
-            
+
         }
 
         private void LogoutBtn_Click(object sender, EventArgs e)
@@ -142,7 +141,7 @@ namespace DiscordBotManager.UI
         private void addCustomFlake_Click(object sender, EventArgs e)
         {
             AuthControls.NewSnowflake form = new AuthControls.NewSnowflake();
-            form.ShowDialog();
+            _ = form.ShowDialog();
         }
     }
 }

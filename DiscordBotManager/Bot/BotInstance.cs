@@ -1,17 +1,12 @@
 ﻿using Discord;
-using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
 using DiscordBotManager.Bot.Modules;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace DiscordBotManager.Bot
 {
@@ -21,7 +16,7 @@ namespace DiscordBotManager.Bot
         public static ulong GUILD_SNOWFLAKE { get; private set; }
 
         public BotInstance(string Custom_Guild_Snowflake)
-        { 
+        {
             _client = new Discord.WebSocket.DiscordSocketClient();
             _client.Ready += BotReady;
             _client.SlashCommandExecuted += SlashCommandHandler;
@@ -29,7 +24,7 @@ namespace DiscordBotManager.Bot
             if (Custom_Guild_Snowflake != "")
             {
                 GUILD_SNOWFLAKE = Convert.ToUInt64(Custom_Guild_Snowflake);
-            }    
+            }
         }
 
         /// <summary>
@@ -82,7 +77,7 @@ namespace DiscordBotManager.Bot
 
                 try
                 {
-                    await _client.Rest.BulkOverwriteGuildCommands(new[]
+                    _ = await _client.Rest.BulkOverwriteGuildCommands(new[]
                     {
                         prune_messages.Build(),
                         get_avatar_url.Build(),
@@ -92,7 +87,7 @@ namespace DiscordBotManager.Bot
                 }
                 catch (HttpException exception)
                 {
-                    var json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
+                    string json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
                     Console.WriteLine(json);
                 }
             }
@@ -114,7 +109,7 @@ namespace DiscordBotManager.Bot
             else if (GUILD_SNOWFLAKE == default)
             {
                 Output("Bot in multiple servers with no custom snowflake");
-                _client.LogoutAsync();
+                _ = _client.LogoutAsync();
             }
             else
             {
