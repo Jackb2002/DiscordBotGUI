@@ -76,6 +76,7 @@ namespace DiscordBotManager.Bot
                 SlashCommandBuilder list_roles = Moderation.GenerateListRolesCommand();
                 SlashCommandBuilder get_avatar_url = Moderation.GenerateAvatarUrlCommand();
                 SlashCommandBuilder prune_messages = Moderation.GeneratePruneCommand();
+                SlashCommandBuilder kick_user = Moderation.GenerateKickCommand();
 
                 #endregion
 
@@ -85,7 +86,8 @@ namespace DiscordBotManager.Bot
                     {
                         prune_messages.Build(),
                         get_avatar_url.Build(),
-                        list_roles.Build()
+                        list_roles.Build(),
+                        kick_user.Build()
                     }, GUILD_SNOWFLAKE);
                 }
                 catch (HttpException exception)
@@ -133,6 +135,9 @@ namespace DiscordBotManager.Bot
                     break;
                 case "prune_messages":
                     await Moderation.prune_messages(command);
+                    break;
+                case "kick_user":
+                    await Moderation.kick_player(command);
                     break;
                 default:
                     break;
