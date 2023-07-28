@@ -134,6 +134,12 @@ namespace DiscordBotManager.Bot
                 case "kick_user":
                     await Moderation.kick_player(command);
                     break;
+                case "mute_user":
+                    await Moderation.mute_player(command);
+                    break;
+                case "unmute_user":
+                    await Moderation.unmute_player(command);
+                    break;
                 default:
                     break;
             }

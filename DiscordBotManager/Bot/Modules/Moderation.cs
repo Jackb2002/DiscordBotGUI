@@ -35,6 +35,46 @@ namespace DiscordBotManager.Bot.Modules
             }
         }
 
+        internal static async Task mute_player(SocketSlashCommand command)
+        {
+            try
+            {
+                List<SocketSlashCommandDataOption> args = command.Data.Options.ToList();
+                SocketGuildUser user = args.FirstOrDefault(x => x.Name == "user").Value as SocketGuildUser;
+                if (!(args.FirstOrDefault(x => x.Name == "reason").Value is string reason))
+                {
+                    reason = "No reason provided";
+                }
+
+                await user.ModifyAsync(x => x.Mute = true);
+                await command.RespondAsync("Muted " + user.Username, ephemeral: true);
+            }
+            catch (Exception error)
+            {
+                await command.RespondAsync("Error: " + error.Message, ephemeral: true);
+            }
+        }
+
+        internal static async Task unmute_player(SocketSlashCommand command)
+        {
+            try
+            {
+                List<SocketSlashCommandDataOption> args = command.Data.Options.ToList();
+                SocketGuildUser user = args.FirstOrDefault(x => x.Name == "user").Value as SocketGuildUser;
+                if (!(args.FirstOrDefault(x => x.Name == "reason").Value is string reason))
+                {
+                    reason = "No reason provided";
+                }
+
+                await user.ModifyAsync(x => x.Mute = false);
+                await command.RespondAsync("Unmuted " + user.Username, ephemeral: true);
+            }
+            catch (Exception error)
+            {
+                await command.RespondAsync("Error: " + error.Message, ephemeral: true);
+            }
+        }
+
         internal static async Task get_avatar_url(SocketSlashCommand command)
         {
             try
@@ -152,6 +192,45 @@ namespace DiscordBotManager.Bot.Modules
                                    "The user you want to kick", isRequired: true)
                 .AddOption("reason", ApplicationCommandOptionType.String,
                 "The reason for kicking the user", isRequired: false);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                throw;
+            }
+        }
+
+        internal static SlashCommandBuilder GenerateMuteCommand()
+        {
+            try
+            {
+                return new SlashCommandBuilder()
+                .WithName("mute_user")
+                .WithDescription("Mute a user in the server")
+                .AddOption("user", ApplicationCommandOptionType.User,
+                                                  "The user you want to mute", isRequired: true)
+                .AddOption("reason", ApplicationCommandOptionType.String,
+                               "The reason for muting the user", isRequired: false);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                throw;
+            }
+        }
+
+        internal static SlashCommandBuilder GenerateUnmuteCommand()
+        {
+            try
+            {
+                return new SlashCommandBuilder()
+                .WithName("unmute_user")
+                .WithDescription("Unmute a user in the server")
+                .AddOption("user", ApplicationCommandOptionType.User,
+                                                      "The user you want to unmute", isRequired: true)
+                    .AddOption("reason", ApplicationCommandOptionType.String,
+                                   "The reason for unmuting the user", isRequired: false);
+            
             }
             catch (Exception e)
             {
